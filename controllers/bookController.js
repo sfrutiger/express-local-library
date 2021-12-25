@@ -163,7 +163,6 @@ exports.book_create_post = [
     }
 ];
 
-
 // Display book delete form on GET.
 exports.book_delete_get = function(req, res, next) {
 
@@ -215,7 +214,6 @@ exports.book_delete_post = function(req, res, next) {
         }
     });
 };
-
 
 // Display book update form on GET.
 exports.book_update_get = function(req, res, next) {
