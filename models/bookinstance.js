@@ -23,13 +23,15 @@ BookInstanceSchema
 BookInstanceSchema
 .virtual('due_back_formatted')
 .get(function () {
-  return DateTime.fromJSDate(this.due_back).toLocaleString(DateTime.DATE_MED);
+  const offset = this.due_back.getTimezoneOffset();
+  return DateTime.fromJSDate(this.due_back).plus({minutes: offset}).toLocaleString(DateTime.DATE_MED);
 });
 
 BookInstanceSchema
 .virtual('due_back_yyyy_mm_dd')
 .get(function () {
-  return DateTime.fromJSDate(this.due_back).toISODate(); //format 'YYYY-MM-DD'
+  const offset = this.due_back.getTimezoneOffset();
+  return DateTime.fromJSDate(this.due_back).plus({minutes: offset}).toISODate(); //format 'YYYY-MM-DD'
 });
 
 

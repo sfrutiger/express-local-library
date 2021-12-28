@@ -32,11 +32,11 @@ AuthorSchema
 AuthorSchema.virtual('lifespan').get(function() {
   var lifetime_string = '';
   if (this.date_of_birth) {
-    lifetime_string = DateTime.fromJSDate(this.date_of_birth).toLocaleString(DateTime.DATE_MED);
+    lifetime_string = DateTime.fromJSDate(this.date_of_birth).toLocaleString({timeZone: 'UTC', month: 'long', day: 'numeric', year: 'numeric'});
   }
   lifetime_string += ' - ';
   if (this.date_of_death) {
-    lifetime_string += DateTime.fromJSDate(this.date_of_death).toLocaleString(DateTime.DATE_MED);
+    lifetime_string += DateTime.fromJSDate(this.date_of_death).toLocaleString({timeZone: 'UTC', month: 'long', day: 'numeric', year: 'numeric'});
   }
   return lifetime_string;
 });
@@ -45,25 +45,27 @@ AuthorSchema.virtual('lifespan').get(function() {
 AuthorSchema
 .virtual('date_of_birth_formatted')
 .get(function () {
-  return this.date_of_birth ? DateTime.fromJSDate(this.date_of_birth).toLocaleString(DateTime.DATE_MED) : '';
+  return this.date_of_birth ? DateTime.fromJSDate(this.date_of_birth).toLocaleString({timeZone: 'UTC', month: 'long', day: 'numeric', year: 'numeric'}) : '';
 });
 
 AuthorSchema
 .virtual('date_of_death_formatted')
 .get(function () {
-  return this.date_of_death ? DateTime.fromJSDate(this.date_of_death).toLocaleString(DateTime.DATE_MED) : '';
+  return this.date_of_death ? DateTime.fromJSDate(this.date_of_death).toLocaleString({timeZone: 'UTC', month: 'long', day: 'numeric', year: 'numeric'}) : '';
 });
 
 AuthorSchema
 .virtual('date_of_birth_yyyy_mm_dd')
 .get(function () {
-  return DateTime.fromJSDate(this.date_of_birth).toISODate(); //format 'YYYY-MM-DD'
+  const offset = this.date_of_birth.getTimezoneOffset();
+  return DateTime.fromJSDate(this.date_of_birth).plus({minutes: offset}).toISODate(); //format 'YYYY-MM-DD'
 });
 
 AuthorSchema
 .virtual('date_of_death_yyyy_mm_dd')
 .get(function () {
-  return DateTime.fromJSDate(this.date_of_death).toISODate(); //format 'YYYY-MM-DD'
+  const offset = this.date_of_death.getTimezoneOffset();
+  return DateTime.fromJSDate(this.date_of_death).plus({minutes: offset}).toISODate(); //format 'YYYY-MM-DD'
 });
 
 // Virtual for author's URL
