@@ -1,12 +1,13 @@
 #! /usr/bin/env node
+var debug = require('debug')('populateddb');
 
-console.log('This script populates some test books, authors, genres and bookinstances to your database. Specified database as argument - e.g.: populatedb mongodb+srv://cooluser:coolpassword@cluster0.a9azn.mongodb.net/local_library?retryWrites=true');
+debug('This script populates some test books, authors, genres and bookinstances to your database. Specified database as argument - e.g.: populatedb mongodb+srv://cooluser:coolpassword@cluster0.a9azn.mongodb.net/local_library?retryWrites=true');
 
 // Get arguments passed on command line
 var userArgs = process.argv.slice(2);
 /*
 if (!userArgs[0].startsWith('mongodb')) {
-    console.log('ERROR: You need to specify a valid mongodb URL as the first argument');
+    debug('ERROR: You need to specify a valid mongodb URL as the first argument');
     return
 }
 */
@@ -22,7 +23,7 @@ var mongoDB = userArgs[0];
 mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true});
 mongoose.Promise = global.Promise;
 var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+db.on('error', debug.bind('MongoDB connection error:'));
 
 var authors = []
 var genres = []
@@ -41,7 +42,7 @@ function authorCreate(first_name, family_name, d_birth, d_death, cb) {
       cb(err, null)
       return
     }
-    console.log('New Author: ' + author);
+    
     authors.push(author)
     cb(null, author)
   }  );
@@ -55,7 +56,7 @@ function genreCreate(name, cb) {
       cb(err, null);
       return;
     }
-    console.log('New Genre: ' + genre);
+    
     genres.push(genre)
     cb(null, genre);
   }   );
@@ -76,7 +77,7 @@ function bookCreate(title, summary, isbn, author, genre, cb) {
       cb(err, null)
       return
     }
-    console.log('New Book: ' + book);
+    
     books.push(book)
     cb(null, book)
   }  );
@@ -94,11 +95,11 @@ function bookInstanceCreate(book, imprint, due_back, status, cb) {
   var bookinstance = new BookInstance(bookinstancedetail);    
   bookinstance.save(function (err) {
     if (err) {
-      console.log('ERROR CREATING BookInstance: ' + bookinstance);
+      debug('ERROR CREATING BookInstance: ' + bookinstance);
       cb(err, null)
       return
     }
-    console.log('New BookInstance: ' + bookinstance);
+    
     bookinstances.push(bookinstance)
     cb(null, book)
   }  );
@@ -216,10 +217,10 @@ async.series([
 // Optional callback
 function(err, results) {
     if (err) {
-        console.log('FINAL ERR: '+err);
+        debug('FINAL ERR: '+err);
     }
     else {
-        console.log('BOOKInstances: '+bookinstances);
+        
         
     }
     // All done, disconnect from database

@@ -45,26 +45,28 @@ AuthorSchema.virtual('lifespan').get(function() {
 AuthorSchema
 .virtual('date_of_birth_formatted')
 .get(function () {
-  return this.date_of_birth ? DateTime.fromJSDate(this.date_of_birth).toLocaleString({timeZone: 'UTC', month: 'long', day: 'numeric', year: 'numeric'}) : '';
+  const offset = this.date_of_birth ? this.date_of_birth.getTimezoneOffset(): 0;
+  return this.date_of_birth ? DateTime.fromJSDate(this.date_of_birth).plus({minutes: offset}).toLocaleString(DateTime.DATE_MED) : '';
 });
 
 AuthorSchema
 .virtual('date_of_death_formatted')
 .get(function () {
-  return this.date_of_death ? DateTime.fromJSDate(this.date_of_death).toLocaleString({timeZone: 'UTC', month: 'long', day: 'numeric', year: 'numeric'}) : '';
+  const offset = this.date_of_death ? this.date_of_death.getTimezoneOffset(): 0;
+  return this.date_of_death ? DateTime.fromJSDate(this.date_of_death).toLocaleString(DateTime.DATE_MED) : '';
 });
 
 AuthorSchema
 .virtual('date_of_birth_yyyy_mm_dd')
 .get(function () {
-  const offset = this.date_of_birth.getTimezoneOffset();
+  const offset = this.date_of_birth ? this.date_of_birth.getTimezoneOffset(): 0;
   return DateTime.fromJSDate(this.date_of_birth).plus({minutes: offset}).toISODate(); //format 'YYYY-MM-DD'
 });
 
 AuthorSchema
 .virtual('date_of_death_yyyy_mm_dd')
 .get(function () {
-  const offset = this.date_of_death.getTimezoneOffset();
+  const offset = this.date_of_death ? this.date_of_death.getTimezoneOffset(): 0;
   return DateTime.fromJSDate(this.date_of_death).plus({minutes: offset}).toISODate(); //format 'YYYY-MM-DD'
 });
 
