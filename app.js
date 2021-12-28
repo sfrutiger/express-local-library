@@ -52,7 +52,7 @@ app.use(function(err, req, res, next) {
 //Set up mongoose connection
 dotenv.config();
 var mongoose = require('mongoose');
-var url = process.env.mongoDB_URI;
+var url = process.env.MONGODB_URI;
 mongoose.connect(url, { useNewUrlParser: true , useUnifiedTopology: true});
 var db = mongoose.connection;
 db.on('error', debug.bind('MongoDB connection error:'));
